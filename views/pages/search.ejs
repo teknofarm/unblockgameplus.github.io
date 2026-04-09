@@ -1,0 +1,66 @@
+<%
+var contentBlock = '';
+
+contentBlock += '<section class="search-page" id="search-page"><div class="container">';
+
+// Header
+contentBlock += '<header class="search-header"><h1 class="search-title">' +
+  (query ? 'Results for: &quot;' + query + '&quot;' : 'Search Articles') + '</h1>';
+if (query && total > 0) contentBlock += '<p class="search-count">Found ' + total.toLocaleString() + ' articles</p>';
+contentBlock += '</header>';
+
+// Search form
+contentBlock += '<form action="/search" method="GET" class="search-form" id="search-form">' +
+  '<div class="search-wrapper large">' +
+  '<svg class="search-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>' +
+  '<input type="text" name="q" value="' + (query || '') + '" placeholder="Type your search..." autocomplete="off" autofocus id="search-input">' +
+  '<button type="submit" class="btn-primary">Search</button>' +
+  '</div></form>';
+
+// No results
+if (query && results.length === 0) {
+  contentBlock += '<div class="no-results"><div class="no-results-icon">🔍</div><h2>No results found</h2><p>Try different keywords or browse our categories</p></div>';
+}
+
+// Top Ad
+if (config.ads.enabled) contentBlock += '<div style="margin: 20px 0;">' + config.ads.bannerUnderTitle + '</div>';
+
+// Results
+if (results.length > 0) {
+  contentBlock += '<div class="article-list search-results">';
+  results.forEach(function(r, idx) {
+    contentBlock += '<article class="list-item"><a href="' + r.url + '"><h3>' + r.keyword + '</h3>' +
+      '<span class="list-meta">' + r.f1 + '/' + r.f2 + '</span><span class="list-arrow">→</span></a></article>';
+
+    // Middle Ad after 5 items
+    if (config.ads.enabled && idx === 4) {
+       contentBlock += '<div style="margin: 20px 0;">' + config.ads.bannerMidArticle + '</div>';
+    }
+  });
+  contentBlock += '</div>';
+
+  // Bottom Ad
+  if (config.ads.enabled) contentBlock += '<div style="margin: 20px 0;">' + config.ads.bannerUnderArticle + '</div>';
+}
+
+// Pagination
+if (typeof pagination !== 'undefined' && pagination && pagination.totalPages > 1) {
+  contentBlock += '<nav class="pagination">';
+  if (pagination.hasPrev) {
+    contentBlock += '<a href="' + pagination.prevUrl + '" class="page-btn prev" rel="prev">← Previous</a>';
+  } else {
+    contentBlock += '<span class="page-btn prev disabled">← Previous</span>';
+  }
+  contentBlock += '<span class="page-info">Page <strong>' + pagination.page + '</strong> of <strong>' + pagination.totalPages + '</strong></span>';
+  if (pagination.hasNext) {
+    contentBlock += '<a href="' + pagination.nextUrl + '" class="page-btn next" rel="next">Next →</a>';
+  } else {
+    contentBlock += '<span class="page-btn next disabled">Next →</span>';
+  }
+  contentBlock += '</nav>';
+}
+
+contentBlock += '</div></section>';
+%>
+
+<%- include('../layouts/main', { contentBlock: contentBlock }) %>

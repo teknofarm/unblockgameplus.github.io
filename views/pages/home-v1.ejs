@@ -1,0 +1,70 @@
+<%
+// Capture content block
+var contentBlock = '';
+%>
+
+<% contentBlock = `
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">Explore <span class="accent">${totalCount.toLocaleString()}</span> Articles</h1>
+    <p class="hero-subtitle">Your comprehensive knowledge base with expertly curated guides and deep-dive insights</p>
+    <form action="/search" method="GET" class="hero-search" id="hero-search">
+      <div class="search-wrapper">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" name="q" placeholder="Search any topic..." autocomplete="off" id="hero-search-input">
+        <button type="submit" class="btn-primary">Search</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="section" id="featured">
+  <div class="container">
+    <h2 class="section-title">Featured Articles</h2>
+    <div class="article-grid">
+` %>
+
+<% articles.forEach(function(a) {
+  contentBlock += '<article class="card"><a href="' + a.url + '" class="card-link"><div class="card-body">' +
+    '<span class="card-cat">' + a.f1 + ' / ' + a.f2 + '</span>' +
+    '<h3 class="card-title">' + a.keyword + '</h3>' +
+    '<span class="card-action">Read article →</span>' +
+    '</div></a></article>';
+}); %>
+
+<% 
+contentBlock += '</div>'; // Close article-grid
+
+if (typeof pagination !== 'undefined' && pagination && pagination.totalPages > 1) {
+  contentBlock += '<nav class="pagination">';
+  if (pagination.hasPrev) {
+    contentBlock += '<a href="' + pagination.prevUrl + '" class="page-btn prev" rel="prev">← Previous</a>';
+  } else {
+    contentBlock += '<span class="page-btn prev disabled">← Previous</span>';
+  }
+  contentBlock += '<span class="page-info">Page <strong>' + pagination.page + '</strong> of <strong>' + pagination.totalPages + '</strong></span>';
+  if (pagination.hasNext) {
+    contentBlock += '<a href="' + pagination.nextUrl + '" class="page-btn next" rel="next">Next →</a>';
+  } else {
+    contentBlock += '<span class="page-btn next disabled">Next →</span>';
+  }
+  contentBlock += '</nav>';
+}
+%>
+
+<% contentBlock += '</div></section>'; %>
+
+<% contentBlock += '<section class="section section-alt" id="categories"><div class="container"><h2 class="section-title">Browse Categories</h2><div class="category-grid">'; %>
+
+<% folders.forEach(function(f) {
+  contentBlock += '<a href="/page/' + f.f1 + '" class="cat-card">' +
+    '<div class="cat-icon">📁</div>' +
+    '<h3>' + f.f1 + '</h3>' +
+    '<p>' + f.subfolders + ' subcategories</p>' +
+    '<span class="cat-count">' + f.totalArticles.toLocaleString() + ' articles</span></a>';
+}); %>
+
+<% contentBlock += '</div></div></section>'; %>
+
+<%- include('../layouts/main', { contentBlock: contentBlock }) %>

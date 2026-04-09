@@ -1,0 +1,121 @@
+<% 
+// 1. Data Preparation
+
+var galleryImages = []; 
+var imgKeywords = []; 
+if (article.related_keywords && article.related_keywords.length > 0) {
+  for (var rk = 0; rk < article.related_keywords.length && imgKeywords.length < 8; rk++) { 
+    var kw = article.related_keywords[rk].trim(); 
+    if (kw && !imgKeywords.includes(kw)) imgKeywords.push(kw); 
+  } 
+} 
+while (imgKeywords.length < 8) { imgKeywords.push(article.title); } 
+
+// URL suffixes: same pattern as PHP native for diversity
+var _sfx = ['', '+1', '+info', '+gallery', '+photo', '+view', '+detail', '+read'];
+
+for (var gi = 0; gi < 8; gi++) { 
+  var _bq = encodeURIComponent(imgKeywords[gi]).replace(/%20/g, '+') + _sfx[gi];
+  // Use tse1.mm.bing.net (Bing Image Search API) — same as PHP native → more stable & Google-friendly
+  galleryImages.push({ 
+    thumb: 'https://tse1.mm.bing.net/th?q=' + _bq + '&pid=Api&mkt=en-US&adlt=moderate', 
+    full:  'https://tse1.mm.bing.net/th?q=' + _bq + '&pid=Api&mkt=en-US&adlt=moderate&w=1200&h=630', 
+    alt: imgKeywords[gi] 
+  }); 
+} 
+
+// 2. Build ContentBlock
+var html = [];
+html.push("<article class='article-page' id='article-page'>");
+html.push("<div class='container article-container'>");
+html.push("<nav class='breadcrumb' aria-label='Breadcrumb'>");
+html.push("<a href='/'>Home</a><span class='sep'>›</span>");
+html.push("<a href='/page/" + f1 + "'>" + f1 + "</a><span class='sep'>›</span>");
+html.push("<a href='/page/" + f1 + "/" + f2 + "'>" + f2 + "</a><span class='sep'>›</span>");
+html.push("<span class='current'>" + article.title + "</span>");
+html.push("</nav>");
+
+html.push("<header class='article-header'>");
+html.push("<h1 class='article-title' id='article-title'>" + article.title + "</h1>");
+html.push("<div class='article-meta'>");
+html.push("<span class='meta-cat'>" + f1 + " / " + f2 + "</span>");
+html.push("</div></header>");
+
+if (config.ads.enabled) { html.push(config.ads.bannerUnderTitle || ""); }
+html.push("<div class='article-content' id='article-content'>" + (contentWithAds || "") + "</div>");
+if (config.ads.enabled) { html.push(config.ads.bannerUnderArticle || ""); }
+
+html.push("<section class='image-gallery' id='image-gallery'>");
+html.push("<h2 class='gallery-title'>📸 Related Images</h2>");
+html.push("<div class='gallery-grid'>");
+galleryImages.forEach(function(img, idx) {
+  html.push("<figure class='gallery-item' onclick='openLightbox(" + idx + ")'>");
+  html.push("<div class='img-wrap'><img src='" + img.thumb + "' alt='" + img.alt + "' loading='lazy' width='400' height='400'></div>");
+  html.push("<figcaption>" + img.alt + "</figcaption></figure>");
+});
+html.push("</div></section>");
+
+if (article.questions && article.questions.length > 0) {
+  html.push("<section class='faq-section' id='faq-section'>");
+  html.push("<h2 class='faq-title'>Frequently Asked Questions</h2>");
+  html.push("<div class='faq-list'>");
+  article.questions.forEach(function(q, i) {
+    html.push("<details class='faq-item' id='faq-" + i + "'>");
+    html.push("<summary class='faq-question'>" + q.question + "</summary>");
+    html.push("<div class='faq-answer'><p>" + q.answer + "</p></div></details>");
+  });
+  html.push("</div></section>");
+}
+
+if (related && related.length > 0) {
+  html.push("<section class='related-section' id='related-section'>");
+  html.push("<h2 class='section-title'>Related Articles</h2>");
+  html.push("<div class='related-grid'>");
+  related.forEach(function(r) {
+    html.push("<a href='" + r.url + "' class='related-card'>");
+    html.push("<span class='related-cat'>" + r.f1 + "/" + r.f2 + "</span>");
+    html.push("<h3>" + r.keyword + "</h3><span class='card-action'>Read more →</span></a>");
+  });
+  html.push("</div></section>");
+}
+
+html.push("</div></article>");
+
+html.push("<div class='lightbox-overlay' id='lightbox-overlay' onclick='closeLightbox(event)'>");
+html.push("<div class='lightbox-inner'>");
+html.push("<div class='lightbox-ad' id='lightbox-ad'>" + (config.ads.enabled ? (config.ads.bannerMidArticle || "") : "") + "</div>");
+html.push("<button class='lightbox-close' onclick='closeLightbox(event)' aria-label='Close'>&times;</button>");
+
+// New Wrapper for horizontal alignment
+html.push("<div class='lightbox-content-wrap'>"); 
+html.push("<button class='lightbox-prev' onclick='prevImage(event)' aria-label='Previous'>‹</button>");
+html.push("<img class='lightbox-img' id='lightbox-img' src='' alt=''>");
+html.push("<button class='lightbox-next' onclick='nextImage(event)' aria-label='Next'>›</button>");
+
+// Download action now next to the image
+html.push("<div class='lightbox-actions' id='lightbox-actions'>");
+html.push("<button class='btn-primary' id='btn-download-verify' onclick='triggerVerify(event)'>📥 Verify to Download</button>");
+html.push("<button class='btn-primary' id='btn-download-ready' style='display:none; background:#27ae60;' onclick='triggerActualDownload(event)'>✅ READY - Click to Download</button>");
+html.push("</div>");
+html.push("</div>"); // End of lightbox-content-wrap
+
+html.push("<p class='lightbox-caption' id='lightbox-caption'></p>");
+html.push("</div></div>");
+
+// Avoid IDE bug by breaking script tags
+html.push("<" + "script" + ">");
+html.push("var galleryData = " + JSON.stringify(galleryImages) + ";");
+html.push("var currentIdx = 0;");
+html.push("function openLightbox(idx) { currentIdx = idx; var lb = document.getElementById('lightbox-overlay'); var img = document.getElementById('lightbox-img'); var cap = document.getElementById('lightbox-caption'); ");
+html.push("document.getElementById('btn-download-verify').style.display = 'inline-flex'; document.getElementById('btn-download-ready').style.display = 'none'; ");
+html.push("img.src = galleryData[idx].full; img.alt = galleryData[idx].alt; cap.textContent = galleryData[idx].alt; lb.classList.add('active'); document.body.style.overflow = 'hidden'; } ");
+html.push("function closeLightbox(e) { if (e.target === document.getElementById('lightbox-overlay') || e.target.classList.contains('lightbox-close')) { document.getElementById('lightbox-overlay').classList.remove('active'); document.body.style.overflow = ''; } } ");
+html.push("function prevImage(e) { e.stopPropagation(); currentIdx = (currentIdx - 1 + galleryData.length) % galleryData.length; openLightbox(currentIdx); } ");
+html.push("function nextImage(e) { e.stopPropagation(); currentIdx = (currentIdx + 1) % galleryData.length; openLightbox(currentIdx); } ");
+html.push("function triggerVerify(e) { e.stopPropagation(); window.open('" + (config.ads.directLinkUrl || "") + "', '_blank'); document.getElementById('btn-download-verify').style.display = 'none'; document.getElementById('btn-download-ready').style.display = 'inline-flex'; } ");
+html.push("function triggerActualDownload(e) { e.stopPropagation(); var link = document.createElement('a'); link.href = galleryData[currentIdx].full; link.target = '_blank'; link.download = galleryData[currentIdx].alt + '.jpg'; document.body.appendChild(link); link.click(); document.body.removeChild(link); } ");
+html.push("</" + "script" + ">");
+
+var cb = html.join("");
+%>
+<%- include("../layouts/main", { contentBlock: cb }) %>

@@ -1,0 +1,89 @@
+<footer class="site-footer" id="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo-icon">◆</span>
+      <span class="logo-text"><%= siteName %></span>
+      <p class="footer-desc">Your comprehensive knowledge base with expertly curated articles and guides.</p>
+    </div>
+
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <a href="/">Home</a>
+        <a href="javascript:void(0)" onclick="openModal('about')">About Us</a>
+        <a href="javascript:void(0)" onclick="openModal('contact')">Contact</a>
+        <a href="/sitemap.xml">Sitemap</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="javascript:void(0)" onclick="openModal('privacy')">Privacy Policy</a>
+        <a href="javascript:void(0)" onclick="openModal('dmca')">DMCA & Copyright</a>
+        <a href="javascript:void(0)" onclick="openModal('about')">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; <%= year %> <%= host %>. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+const modalData = {
+    contact: `
+        <h2>Connect With Us</h2>
+        <p>For any inquiries, technical assistance, or content-related questions, please reach out to our dedicated support team. We are here to ensure your experience is seamless and delightful.</p>
+        <p>Email: <a href="mailto:dmcareportmail@gmail.com">dmcareportmail@gmail.com</a></p>
+        <p>We endeavor to respond to all messages with care and efficiency, typically within 24–48 business hours.</p>
+        <p>To help us assist you more effectively, kindly include the exact document title or URL when reporting an issue.</p>
+    `,
+    dmca: `
+        <h2>DMCA & Copyright Information</h2>
+        <p>We hold intellectual property rights in high regard and strictly adhere to the Digital Millennium Copyright Act (DMCA). Our commitment is to respect creators and their work.</p>
+        <p>If you believe that any content accessible through our platform infringes upon your copyright, we invite you to submit a formal written notification. Please include:</p>
+        <ul>
+            <li>Clear identification of the copyrighted work you claim has been infringed.</li>
+            <li>The precise URL(s) of the material on our site that you allege is infringing.</li>
+            <li>Your complete contact information (name, address, telephone number, and email address).</li>
+            <li>A statement affirming your good-faith belief that the use of the material is not authorized by the copyright owner, its agent, or the law.</li>
+            <li>A statement, made under penalty of perjury, that the information in your notice is accurate and that you are the copyright owner or authorized to act on the copyright owner's behalf.</li>
+            <li>Your electronic or physical signature.</li>
+        </ul>
+        <p>Please direct all DMCA notices to:</p>
+        <p><a href="mailto:dmcareportmail@gmail.com">dmcareportmail@gmail.com</a></p>
+        <p>Upon receipt of a valid notification, we will promptly review and take appropriate action in accordance with DMCA guidelines, ensuring fairness and compliance.</p>
+    `,
+    about: `
+        <h2>About Our Curated Space</h2>
+        <p>This platform is thoughtfully designed as an automated document indexing and reference system, dedicated to gracefully organizing publicly accessible materials. Our aim is to create a serene and efficient gateway to knowledge.</p>
+        <p>Our mission is to enhance the discoverability and provide structured access to a world of educational and informational documents across diverse topics, presented with an aesthetic touch that inspires.</p>
+        <p>We do not claim ownership of third-party materials; all rights remain with their respective authors and publishers. We are simply a conduit, connecting you to valuable resources.</p>
+        <p>Should you be a rights holder with any concerns regarding a listing, please do not hesitate to contact us directly. Your peace of mind and intellectual property are of utmost importance to us.</p>
+    `,
+    privacy: `
+        <h2>Your Privacy, Our Priority</h2>
+        <p>Your privacy is a cornerstone of our philosophy. We operate this site with a commitment to minimal data collection, ensuring a tranquil and secure browsing experience for all our visitors.</p>
+        <ul>
+            <li>No account registration is ever required – explore freely and anonymously!</li>
+            <li>Your personal data is never sold, shared, or exploited for any purpose.</li>
+            <li>We consciously avoid invasive tracking technologies, respecting your digital footprint and personal space.</li>
+        </ul>
+        <p>Basic server logs may be recorded for essential security, performance monitoring, and abuse prevention. These practices are solely to maintain the integrity and smooth operation of our service.</p>
+        <p>By embracing our site, you agree to standard web server logging practices necessary for a seamless and secure experience. For any privacy concerns or questions, please connect with us at: <a href="mailto:dmcareportmail@gmail.com">dmcareportmail@gmail.com</a></p>
+    `
+};
+
+function openModal(type) {
+    document.getElementById("modal-content").innerHTML = modalData[type];
+    const modal = document.getElementById("modal");
+    modal.style.display = "flex";
+    // Trigger transition shortly after block display
+    setTimeout(() => modal.classList.add("show"), 10);
+}
+
+function closeModal() {
+    const modal = document.getElementById("modal");
+    modal.classList.remove("show");
+    setTimeout(() => modal.style.display = "none", 300);
+}
+</script>
