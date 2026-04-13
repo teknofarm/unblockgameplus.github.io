@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "build": "node scripts/export-static.js",
+    "vercel-build": "npm install"
   },
   "dependencies": {
     "compression": "^1.7.4",

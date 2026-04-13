@@ -4,12 +4,32 @@
  * Server restart only needed if you change THIS file or route files
  */
 
+/**
+ * AGC Engine Configuration - v2.3 (PageSpeed Ultra Edition)
+ * Lihat CHANGELOG.md untuk riwayat pembaruan dan fitur baru.
+ */
+
 module.exports = {
   port: process.env.PORT || 3000,
   forceHttps: true, // Set to true to force https:// in all URLs (Sitemap, RSS, etc)
 
-  // Data directories (relative to project root)
-  dataDir: './apalah',
+  // ── Permalink / URL Format ─────────────────────────────
+  // Model 'a' → /{dinamis}/{f1}/{f2}/{action}{code}{slug}   (4-segment, prefix kata acak per artikel)
+  // Model 'b' → /{f1}/{f2}/{action}{code}{slug}             (3-segment, lebih pendek)
+  // Model 'c' → /{f1}/{f2}/{slug} ATAU /{f2}/{f1}/{slug}    (3-segment, urutan folder acak)
+  permalinkModel: 'c',    // 'a', 'b', atau 'c'
+  urlShuffling: true,     // Toggle for dynamic URL shuffling on every refresh
+  urlDelimiter: 'mix',    // 'dash' (-), 'underscore' (_), or 'mix' (both)
+
+  // ── Special Link Redirects ────────────────────────────
+  specialRedirects: {
+    enabled: true,
+    keywords: ['unblock game', 'unblocked game'],
+    targetUrl: 'https://unblockgamegplus.github.io/'
+  },
+
+  // Data directories (Auto-switch to filtered data if present)
+  dataDir: require('fs').existsSync('./data') ? './data' : './apalah',
   keywDir: './keyw',
 
   // Auto-domain: detected from request headers
@@ -33,9 +53,10 @@ module.exports = {
   cache: {
     keywordIndexTTL: 3600000,   // Rebuild keyword index every 1 hour (ms)
     contentCacheMax: 500,        // Max articles in LRU content cache
-    homepageArticles: 30,        // Articles shown on homepage
+    homepageArticles: 50,        // Articles shown on homepage
     categoryPerPage: 50,         // Articles per category page
     searchPerPage: 30,           // Search results per page
+    imageProxyCacheMax: 100,     // Max images cached in RAM (Low-RAM safety)
   },
 
   // Adsterra Ad Configuration
@@ -98,6 +119,20 @@ module.exports = {
 <script src="https://biggerbreakerfind.com/72aae8a75da17a34e48ed84feaa311bf/invoke.js"></script>
 </div>`,
 
+    // Banner Sticky Floating Ad (728x90)
+    bannerSticky: `<div class="ad-slot ad-sticky" id="ad-sticky-footer">
+<script>
+  atOptions = {
+    'key' : '72aae8a75da17a34e48ed84feaa311bf',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+</script>
+<script src="https://biggerbreakerfind.com/72aae8a75da17a34e48ed84feaa311bf/invoke.js"></script>
+</div>`,
+
     // Adsterra Social Bar
     socialBar: `<script src="https://biggerbreakerfind.com/48/5f/74/485f7426bb614d7e620b0e088268e010.js"></script>`,
 
@@ -126,7 +161,7 @@ module.exports = {
       'mozdomainstats', 'proximic', 'wotbox', 'cliqzbot', 'rankactive',
       'netcraftsurveyagent', 'webdatastats', 'grapeshotcrawler', 'nutch',
       'libwww-perl', 'python-requests', 'python-urllib', 'scrapy',
-      'headlesschrome', 'phantomjs', 'nightmare', 'zmeu', 'masscan', 'sqlmap'
+      'headlesschrome', 'phantomjs', 'nightmare', 'zmeu', 'masscan', 'ClaudeBot', 'AmazonBot', 'sqlmap'
     ]
   },
 
