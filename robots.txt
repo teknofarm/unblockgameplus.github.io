@@ -1,0 +1,65 @@
+User-agent: *
+Allow: /
+Allow: /search
+Allow: /search/*
+Allow: /sitemap.xml
+Allow: /sitemap-news.xml
+
+# Block Aggressive Scrapers & SEO Tools
+User-agent: Ahrefs
+User-agent: Semrush
+User-agent: Mj12bot
+User-agent: Dotbot
+User-agent: Rogerbot
+User-agent: Megaindex
+User-agent: Zoominfobot
+User-agent: Exabot
+User-agent: Petalbot
+User-agent: Commoncrawl
+User-agent: Gptbot
+User-agent: Ccbot
+User-agent: Facebookexternalhit
+User-agent: Meta-external
+User-agent: Facebot
+User-agent: Metabot
+User-agent: Meta-externalagent
+User-agent: Meta-webindexer
+User-agent: Blexbot
+User-agent: Dataforseobot
+User-agent: Linkfluence
+User-agent: Seokicks
+User-agent: Serpstatbot
+User-agent: Seznambot
+User-agent: Bytespider
+User-agent: Sogou
+User-agent: Siteauditbot
+User-agent: Screaming frog
+User-agent: Screamingfrog
+User-agent: Spyfu
+User-agent: Mozdomainstats
+User-agent: Proximic
+User-agent: Wotbox
+User-agent: Cliqzbot
+User-agent: Rankactive
+User-agent: Netcraftsurveyagent
+User-agent: Webdatastats
+User-agent: Grapeshotcrawler
+User-agent: Nutch
+User-agent: Libwww-perl
+User-agent: Python-requests
+User-agent: Python-urllib
+User-agent: Scrapy
+User-agent: Headlesschrome
+User-agent: Phantomjs
+User-agent: Nightmare
+User-agent: Zmeu
+User-agent: Masscan
+User-agent: ClaudeBot
+User-agent: AmazonBot
+User-agent: Sqlmap
+Disallow: /
+
+# Dynamic Sitemaps for localhost
+Sitemap: https://localhost/sitemap.xml
+Sitemap: https://localhost/sitemap-news.xml
+Sitemap: https://localhost/rss.xml
