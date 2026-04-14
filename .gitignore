@@ -1,7 +1,7 @@
 # Data folders (artikel & keyword - apalah terlalu besar untuk Git)
 apalah/
-keyw/
 kw/
+# Note: keyw/ is small enough to be tracked
 
 # Track filtered data only
 !data/
