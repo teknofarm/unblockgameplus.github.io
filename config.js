@@ -9,6 +9,8 @@
  * Lihat CHANGELOG.md untuk riwayat pembaruan dan fitur baru.
  */
 
+const path = require('path');
+
 module.exports = {
   port: process.env.PORT || 3000,
   forceHttps: true, // Set to true to force https:// in all URLs (Sitemap, RSS, etc)
