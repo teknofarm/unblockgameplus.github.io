@@ -28,9 +28,15 @@ module.exports = {
     targetUrl: 'https://unblockgamegplus.github.io/'
   },
 
-  // Data directories (Auto-switch to filtered data if present)
-  dataDir: require('fs').existsSync('./data') ? './data' : './apalah',
-  keywDir: './keyw',
+  // Data directories (Auto-detect Filtered vs Full)
+  dataDir: require('fs').existsSync(path.join(__dirname, 'data')) 
+    ? path.join(__dirname, 'data') 
+    : path.join(__dirname, 'apalah'),
+  keywDir: path.join(__dirname, 'keyw'),
+
+  // Pathing for subdirectory hosting (GitHub Pages)
+  // Set this to '/your-repo-name' if hosted on a subfolder
+  basePath: process.env.BASE_PATH || '',
 
   // Auto-domain: detected from request headers
   // These are fallbacks only

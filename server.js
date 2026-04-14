@@ -100,7 +100,8 @@ app.use((req, res, next) => {
       : host.replace(/^www\./, '').split('.')[0];
 
     res.locals.siteName = detectSiteName || config.siteName;
-  res.locals.currentUrl = `${baseUrl}${req.originalUrl}`;
+  res.locals.basePath = config.basePath || '';
+  res.locals.currentUrl = `${baseUrl}${config.basePath}${req.originalUrl}`;
   res.locals.currentPath = req.path;
   res.locals.config = config;
   res.locals.year = new Date().getFullYear();
@@ -111,7 +112,7 @@ app.use((req, res, next) => {
   res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   
   if (req.path === '/' || req.path.includes('/view')) {
-    res.setHeader('Link', '</css/style.css>; rel=preload; as=style');
+    res.setHeader('Link', `<${config.basePath}/css/style.css>; rel=preload; as=style`);
   }
 
   // Inject current theme variables

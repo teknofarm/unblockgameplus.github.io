@@ -58,6 +58,13 @@ async function renderPage(url) {
 }
 
 async function runExport() {
+  // Auto-detect Repository Path for GitHub Pages (Project Site)
+  if (process.env.GITHUB_REPOSITORY && !process.env.CUSTOM_DOMAIN) {
+    const repoName = process.env.GITHUB_REPOSITORY.split('/')[1];
+    config.basePath = `/${repoName}`;
+    console.log(`📌 Detected GitHub Project Site. Setting basePath to: ${config.basePath}`);
+  }
+
   const distDir = path.resolve(__dirname, '../dist');
   console.log(`\n🚀 Starting Multi-Account Static Export...`);
   console.log(`📂 Destination: ${distDir}`);
